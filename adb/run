@@ -1,0 +1,8 @@
+#!/bin/bash
+# This script opens 4 terminal windows.
+i="0"
+while [ $i -lt 4 ]
+do
+adb shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' > tmp.png
+cp -R tmp.png screen.png
+done

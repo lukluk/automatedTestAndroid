@@ -1,0 +1,13 @@
+{
+  "name": "android-test",
+  "private": false,
+  "version": "0.0.3",
+  "description": "android app automation test on real device",
+  "bin": { "androidwebtest": "server.js" },  
+  "author": {
+    "name": "lukluk",
+    "email": "luklukaha@gmail.com"
+  },
+  "license": "GPL",
+  "readmeFilename": "README.md"
+}

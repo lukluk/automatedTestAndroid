@@ -1,0 +1,116 @@
+<script type="text/javascript" src="jq.js"></script>
+<img src="" id="img">
+<script>
+function loop() {
+    var d = new Date();
+    var n = d.getTime();
+    $('#img').attr('src', 'screen.png?' + n);
+    setTimeout(loop, 100);
+}
+var start = null;
+var data = [];
+var playData=[];
+var name = null;
+var index=0;
+var record = new function() {
+    this.start = function() {
+        name = prompt('Macros name');
+        start = new Date();
+        localStorage.removeItem(name);
+    }
+    this.stop = function() {
+        if (name) {
+
+            localStorage.setItem(name, JSON.stringify(data));
+            start = null;
+            name = null;
+            data = [];
+        }
+    }
+    this.play = function(str) {
+        playData = JSON.parse(localStorage.getItem(str));     
+        record.run();
+            
+        
+    }
+    this.run=function(cmd,delay){
+    	if(playData.length<=index){
+    		return false;
+    	}
+    	if(!cmd){
+    		index=0;
+    		cmd=playData[index].cmd;
+    		delay=playData[index].sec;
+    	}
+    	setTimeout(function() {
+	                $.get(cmd, function() {	                	
+	                	record.run(playData[index].cmd,playData[index].sec);
+	                	index++;
+	                })
+            }, delay);
+    }
+    this.push = function(cmd) {
+    	if(!start){ return false;}
+        var o = {};
+        var d = new Date();
+        o.sec = (d.getTime() - start.getTime());
+        start=new Date();
+        if(data.length>0){        	
+        	
+        }else{
+        	o.sec=0;
+        }
+        o.cmd = cmd;
+        if (start)
+            data.push(o);
+    }
+
+}
+
+
+
+$('#img').click(function(e) {
+    record.push('/adb.tap?x=' + e.offsetX + '&y=' + e.offsetY);
+    $.get('/adb.tap?x=' + e.offsetX + '&y=' + e.offsetY, function() {
+
+    })
+})
+$(document).keydown(function(e) {
+    e.preventDefault();
+    var code = String.fromCharCode(e.which).toLowerCase();
+    if (e.which == 8) {
+        code = 67;
+        record.push('/adb.key?key=' + code);
+        $.get('/adb.key?key=' + code, function() {
+
+        })
+    } else
+    if (e.which == 9) {
+        code = 61;
+        record.push('/adb.key?key=' + code);
+        $.get('/adb.key?key=' + code, function() {
+
+        })
+    } else
+    if (e.which == 9) {
+        code = 61;
+        record.push('/adb.key?key=' + code);
+        $.get('/adb.key?key=' + code, function() {
+
+        })
+    } else
+    if (e.which == 192) {
+        code = 4;
+        record.push('/adb.key?key=' + code);
+        $.get('/adb.key?key=' + code, function() {
+
+        })
+    } else {
+        record.push('/adb.type?key=' + code);
+        $.get('/adb.type?key=' + code, function() {
+
+        })
+    }
+})
+loop();
+</script>
